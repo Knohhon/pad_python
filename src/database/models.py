@@ -57,7 +57,7 @@ class Test(Base):
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4, index=True)
     title: Mapped[str] = mapped_column(nullable=False, index=True)
-    creator_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 

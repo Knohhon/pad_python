@@ -1,8 +1,12 @@
 services:
 
   app-service:
-    build: src/
+    build: .
     container_name: knowledge_testing_app
+    ports:
+      - "8000:8000"
+    networks:
+      - app_newtwork
 
 
   db-service:
@@ -16,4 +20,12 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data 
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_newtwork
+
+networks:
+  app_newtwork:
+
+volumes:
+  postgres_data:

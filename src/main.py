@@ -1,5 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
+from fastapi import Depends
 from database.database import Base, engine
 from routers.user_router import router as user_router
 
