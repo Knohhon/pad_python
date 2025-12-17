@@ -1,8 +1,9 @@
 services:
 
   app-service:
-    build:
-    container_name:
+    build: src/
+    container_name: knowledge_testing_app
+    
 
   db-service:
   image: postgres:16
