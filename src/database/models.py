@@ -43,13 +43,13 @@ class Question(Base):
     question : Mapped[str] = mapped_column(nullable=False)
     answer: Mapped[str] = mapped_column(nullable=False)
     answer_options: Mapped[list]  = mapped_column(default=[])
-    group: Mapped[str] = mapped_column(default='Else')
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(
         default=datetime.now, onupdate=datetime.now
     )
 
     user = relationship("User", back_populates="questions")
+    tests = relationship("Test", secondary='test_question', back_populates="questions")
 
 
 class Test(Base):

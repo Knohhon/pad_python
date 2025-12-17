@@ -1,5 +1,6 @@
-from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic import BaseModel, EmailStr, Field, field_validator, ConfigDict
 from typing import Optional
+from uuid import UUID
 
 class UserCreate(BaseModel):
     email: EmailStr
@@ -15,16 +16,21 @@ class UserCreate(BaseModel):
         return v
     
     @field_validator('role')
-    def role_type(cls, v, values):
+    def role_type(cls, v):
         if v not in ['user', 'admin']:
             raise ValueError('Не корректный тип пользователя')
         return v
+    
+
+class UserAuth(BaseModel):
+    email: EmailStr
+    password: str
+    model_config = ConfigDict(from_attributes=True)
+    
 
 class UserResponse(BaseModel):
-    id: int
+    id: UUID
     email: EmailStr
     username: str
     role: str
-    
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
