@@ -3,12 +3,11 @@ from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID
 
-from schemas.question import QuestionCreate, QuestionResponse, QuestionUpdate
-from database.models import Test, Question, User
-from crud import question_crud
-from database.database import get_db
-from utils.check_role import get_current_admin
-from utils.security import get_current_user
+from src.schemas.question import QuestionCreate, QuestionResponse, QuestionUpdate
+from src.database.database_models import Test, Question, User, get_db
+from src.crud import question_crud
+from src.utils.check_role import get_current_admin
+from src.utils.security import get_current_user
 
 router = APIRouter(prefix="/questions", tags=["questions"])
 

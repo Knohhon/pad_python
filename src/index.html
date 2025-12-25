@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Testing App</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --danger: #f72585;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fb;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 2rem;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .section {
+            display: none;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .question-container {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .option-btn {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .option-btn:hover {
+            background: #e9ecef;
+        }
+        
+        .option-btn.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .test-list, .question-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .test-card, .question-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: transform 0.3s;
+        }
+        
+        .test-card:hover, .question-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .test-card h3, .question-card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .notification {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .notification.show {
+            opacity: 1;
+        }
+        
+        .notification.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .notification.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-weight: 500;
+            padding: 5px 10px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Knowledge Test</div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="nav-link" data-section="tests-list">Тесты</a></li>
+                    <li><a href="#" class="nav-link" data-section="take-test" id="take-test-link" style="display:none">Пройти тест</a></li>
+                    <li><a href="#" class="nav-link" data-section="questions-list">Вопросы</a></li>
+                    <li><a href="#" class="nav-link" data-section="create-test" id="create-test-link" style="display:none">Создать тест</a></li>
+                    <li><a href="#" class="nav-link" data-section="create-question" id="create-question-link" style="display:none">Добавить вопрос</a></li>
+                </ul>
+            </nav>
+            <div class="auth-section">
+                <div class="auth-buttons">
+                    <button class="btn btn-primary" id="login-btn">Войти</button>
+                    <button class="btn btn-secondary" id="register-btn">Регистрация</button>
+                </div>
+                <div class="user-section" style="display:none">
+                    <div class="user-info">
+                        <div class="user-avatar" id="user-initials">U</div>
+                        <span id="user-email"></span>
+                    </div>
+                    <button class="logout-btn" id="logout-btn">Выйти</button>
+                </div>
+            </div>
+        </header>
+
+        <div id="notification" class="notification"></div>
+
+        <!-- Auth Sections -->
+        <section id="login-section" class="section active">
+            <h2>Вход в систему</h2>
+            <div class="form-group">
+                <label for="login-email">Email</label>
+                <input type="email" id="login-email" placeholder="Введите email">
+            </div>
+            <div class="form-group">
+                <label for="login-password">Пароль</label>
+                <input type="password" id="login-password" placeholder="Введите пароль">
+            </div>
+            <button class="btn btn-primary" id="submit-login">Войти</button>
+        </section>
+
+        <section id="register-section" class="section">
+            <h2>Регистрация</h2>
+            <div class="form-group">
+                <label for="register-email">Email</label>
+                <input type="email" id="register-email" placeholder="Введите email">
+            </div>
+            <div class="form-group">
+                <label for="register-username">Имя пользователя</label>
+                <input type="text" id="register-username" placeholder="Введите имя">
+            </div>
+            <div class="form-group">
+                <label for="register-password">Пароль</label>
+                <input type="password" id="register-password" placeholder="Введите пароль">
+            </div>
+            <div class="form-group">
+                <label for="register-confirm">Подтвердите пароль</label>
+                <input type="password" id="register-confirm" placeholder="Подтвердите пароль">
+            </div>
+            <div class="form-group">
+                <label for="register-role">Роль</label>
+                <select id="register-role">
+                    <option value="user">Пользователь</option>
+                    <option value="admin">Администратор</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" id="submit-register">Зарегистрироваться</button>
+        </section>
+
+        <!-- Main Sections -->
+        <section id="tests-list" class="section">
+            <h2>Доступные тесты</h2>
+            <div class="test-list" id="tests-container">
+                <!-- Тесты будут загружены здесь -->
+            </div>
+        </section>
+
+        <section id="take-test" class="section">
+            <h2 id="current-test-title">Название теста</h2>
+            <div id="questions-container"></div>
+            <button class="btn btn-primary" id="submit-test">Завершить тест</button>
+        </section>
+
+        <section id="questions-list" class="section">
+            <h2>База вопросов</h2>
+            <div class="question-list" id="questions-list-container">
+                <!-- Вопросы будут загружены здесь -->
+            </div>
+        </section>
+
+        <section id="create-test" class="section">
+            <h2>Создание нового теста</h2>
+            <div class="form-group">
+                <label for="test-title">Название теста</label>
+                <input type="text" id="test-title" placeholder="Введите название теста">
+            </div>
+            <div class="form-group">
+                <label>Вопросы</label>
+                <div id="test-questions-container">
+                    <!-- Вопросы будут добавлены здесь -->
+                </div>
+                <button class="btn btn-secondary" id="add-question-btn">Добавить вопрос</button>
+            </div>
+            <button class="btn btn-primary" id="create-test-btn">Создать тест</button>
+        </section>
+
+        <section id="create-question" class="section">
+            <h2>Добавление нового вопроса</h2>
+            <div class="form-group">
+                <label for="question-text">Текст вопроса</label>
+                <textarea id="question-text" rows="3" placeholder="Введите текст вопроса"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="correct-answer">Правильный ответ</label>
+                <input type="text" id="correct-answer" placeholder="Введите правильный ответ">
+            </div>
+            <div class="form-group">
+                <label>Варианты ответов</label>
+                <div id="answer-options-container">
+                    <div class="form-group">
+                        <input type="text" class="answer-option" placeholder="Вариант ответа 1">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="answer-option" placeholder="Вариант ответа 2">
+                    </div>
+                </div>
+                <button class="btn btn-secondary" id="add-option-btn">Добавить вариант</button>
+            </div>
+            <button class="btn btn-primary" id="create-question-btn">Добавить вопрос</button>
+        </section>
+    </div>
+
+    <script>
+        // Глобальные переменные
+        let currentUser = null;
+        let currentTest = null;
+        const API_URL = 'http://localhost:8000'; // Замените на ваш URL в продакшене
+
+        // DOM элементы
+        const sections = {
+            login: document.getElementById('login-section'),
+            register: document.getElementById('register-section'),
+            testsList: document.getElementById('tests-list'),
+            takeTest: document.getElementById('take-test'),
+            questionsList: document.getElementById('questions-list'),
+            createTest: document.getElementById('create-test'),
+            createQuestion: document.getElementById('create-question')
+        };
+
+        const navLinks = document.querySelectorAll('.nav-link');
+        const authButtons = document.querySelector('.auth-buttons');
+        const userSection = document.querySelector('.user-section');
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const submitLogin = document.getElementById('submit-login');
+        const submitRegister = document.getElementById('submit-register');
+        const notification = document.getElementById('notification');
+        const takeTestLink = document.getElementById('take-test-link');
+        const createTestLink = document.getElementById('create-test-link');
+        const createQuestionLink = document.getElementById('create-question-link');
+        const userInitials = document.getElementById('user-initials');
+        const userEmail = document.getElementById('user-email');
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', init);
+
+        function init() {
+            // Проверка авторизации при загрузке
+            checkAuth();
+            
+            // Обработчики навигации
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const sectionId = link.getAttribute('data-section');
+                    showSection(sectionId);
+                });
+            });
+            
+            // Обработчики аутентификации
+            loginBtn.addEventListener('click', () => showSection('login-section'));
+            registerBtn.addEventListener('click', () => showSection('register-section'));
+            logoutBtn.addEventListener('click', logout);
+            submitLogin.addEventListener('click', login);
+            submitRegister.addEventListener('click', register);
+            
+            // Обработчики функционала тестов
+            document.getElementById('add-question-btn').addEventListener('click', addQuestionField);
+            document.getElementById('create-test-btn').addEventListener('click', createTest);
+            document.getElementById('submit-test').addEventListener('click', submitTest);
+            
+            // Обработчики вопросов
+            document.getElementById('add-option-btn').addEventListener('click', addAnswerOption);
+            document.getElementById('create-question-btn').addEventListener('click', createQuestion);
+            
+            // Загрузка данных при показе разделов
+            document.getElementById('tests-list').addEventListener('show', loadTests);
+            document.getElementById('questions-list').addEventListener('show', loadQuestions);
+        }
+
+        // Проверка авторизации
+        function checkAuth() {
+            const token = localStorage.getItem('auth_token');
+            const user = JSON.parse(localStorage.getItem('current_user'));
+            
+            if (token && user) {
+                currentUser = user;
+                updateUI();
+                loadTests();
+            }
+        }
+
+        // Обновление интерфейса в зависимости от роли
+        function updateUI() {
+            if (currentUser) {
+                // Показать элементы для авторизованных
+                authButtons.style.display = 'none';
+                userSection.style.display = 'flex';
+                userInitials.textContent = currentUser.username.charAt(0).toUpperCase();
+                userEmail.textContent = currentUser.email;
+                
+                // Показать элементы в зависимости от роли
+                if (currentUser.role === 'admin') {
+                    createTestLink.style.display = 'block';
+                    createQuestionLink.style.display = 'block';
+                }
+                
+                // Показать основной контент
+                showSection('tests-list');
+            } else {
+                // Скрыть элементы для авторизованных
+                authButtons.style.display = 'flex';
+                userSection.style.display = 'none';
+                createTestLink.style.display = 'none';
+                createQuestionLink.style.display = 'none';
+                takeTestLink.style.display = 'none';
+                showSection('login-section');
+            }
+        }
+
+        // Показать раздел
+        function showSection(sectionId) {
+            // Скрыть все разделы
+            Object.values(sections).forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Показать нужный раздел
+            if (sections[sectionId]) {
+                sections[sectionId].classList.add('active');
+                
+                // Загрузить данные при необходимости
+                if (sectionId === 'tests-list') loadTests();
+                if (sectionId === 'questions-list') loadQuestions();
+            }
+            
+            // Обновить активные ссылки навигации
+            navLinks.forEach(link => {
+                link.classList.toggle('active', link.getAttribute('data-section') === sectionId);
+            });
+        }
+
+        // Показать уведомление
+        function showNotification(message, type = 'success') {
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Авторизация
+        async function login() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Неверные учетные данные');
+                }
+                
+                const data = await response.json();
+                localStorage.setItem('auth_token', data.access_token);
+                localStorage.setItem('current_user', JSON.stringify(data.user));
+                currentUser = data.user;
+                
+                showNotification('Успешный вход в систему!');
+                updateUI();
+            } catch (error) {
+                showNotification(error.message || 'Ошибка при входе', 'error');
+            }
+        }
+
+        // Регистрация
+        async function register() {
+            const email = document.getElementById('register-email').value;
+            const username = document.getElementById('register-username').value;
+            const password = document.getElementById('register-password').value;
+            const confirm = document.getElementById('register-confirm').value;
+            const role = document.getElementById('register-role').value;
+            
+            if (password !== confirm) {
+                showNotification('Пароли не совпадают', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, username, password, confirm_password: confirm, role })
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || 'Ошибка регистрации');
+                }
+                
+                showNotification('Регистрация успешна! Теперь войдите в систему');
+                showSection('login-section');
+            } catch (error) {
+                showNotification(error.message || 'Ошибка при регистрации', 'error');
+            }
+        }
+
+        // Выход из системы
+        function logout() {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('current_user');
+            currentUser = null;
+            updateUI();
+            showNotification('Вы вышли из системы');
+        }
+
+        // Загрузка тестов
+        async function loadTests() {
+            try {
+                const token = localStorage.getItem('auth_token');
+                const response = await fetch(`${API_URL}/tests/`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Ошибка загрузки тестов');
+                
+                const tests = await response.json();
+                renderTests(tests);
+            } catch (error) {
+                showNotification(error.message || 'Ошибка загрузки тестов', 'error');
+            }
+        }
+
+        // Отображение тестов
+        function renderTests(tests) {
+            const container = document.getElementById('tests-container');
+            container.innerHTML = '';
+            
+            if (tests.length === 0) {
+                container.innerHTML = '<p>Нет доступных тестов</p>';
+                return;
+            }
+            
+            tests.forEach(test => {
+                const testCard = document.createElement('div');
+                testCard.className = 'test-card';
+                testCard.innerHTML = `
+                    <h3>${test.title}</h3>
+                    <p>Вопросов: ${test.questions.length}</p>
+                    <button class="btn btn-primary take-test-btn" data-id="${test.id}">Начать тест</button>
+                `;
+                container.appendChild(testCard);
+            });
+            
+            // Добавить обработчики кнопок
+            document.querySelectorAll('.take-test-btn').forEach(btn => {
+                btn.addEventListener('click', () => startTest(btn.dataset.id));
+            });
+        }
+
+        // Начать тест
+        async function startTest(testId) {
+            try {
+                const token = localStorage.getItem('auth_token');
+                const response = await fetch(`${API_URL}/tests/${testId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Ошибка загрузки теста');
+                
+                currentTest = await response.json();
+                renderTest(currentTest);
+                showSection('take-test');
+                takeTestLink.style.display = 'block';
+            } catch (error) {
+                showNotification(error.message || 'Ошибка загрузки теста', 'error');
+            }
+        }
+
+        // Отображение теста
+        function renderTest(test) {
+            document.getElementById('current-test-title').textContent = test.title;
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            test.questions.forEach((question, index) => {
+                const questionEl = document.createElement('div');
+                questionEl.className = 'question-container';
+                questionEl.innerHTML = `
+                    <h3>Вопрос ${index + 1}</h3>
+                    <p>${question.text}</p>
+                    <div class="options-container" id="options-${question.id}">
+                        ${question.options.map(opt => `
+                            <button class="option-btn" data-question="${question.id}" data-option="${opt}">${opt}</button>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(questionEl);
+            });
+            
+            // Добавить обработчики выбора ответов
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Убрать выделение с других кнопок для этого вопроса
+                    const questionId = this.dataset.question;
+                    document.querySelectorAll(`[data-question="${questionId}"]`).forEach(b => {
+                        b.classList.remove('selected');
+                    });
+                    // Выделить текущую кнопку
+                    this.classList.add('selected');
+                });
+            });
+        }
+
+        // Отправка результатов теста
+        function submitTest() {
+            const answers = [];
+            document.querySelectorAll('.question-container').forEach(container => {
+                const questionId = container.querySelector('.options-container').id.split('-')[1];
+                const selectedOption = container.querySelector('.option-btn.selected');
+                if (selectedOption) {
+                    answers.push({
+                        question_id: questionId,
+                        answer: selectedOption.dataset.option
+                    });
+                }
+            });
+            
+            // Здесь нужно отправить ответы на сервер
+            console.log('Ответы:', answers);
+            showNotification('Тест завершен! Результаты отправлены');
+            showSection('tests-list');
+        }
+
+        // Загрузка вопросов
+        async function loadQuestions() {
+            try {
+                const token = localStorage.getItem('auth_token');
+                const response = await fetch(`${API_URL}/questions/`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Ошибка загрузки вопросов');
+                
+                const questions = await response.json();
+                renderQuestions(questions);
+            } catch (error) {
+                showNotification(error.message || 'Ошибка загрузки вопросов', 'error');
+            }
+        }
+
+        // Отображение вопросов
+        function renderQuestions(questions) {
+            const container = document.getElementById('questions-list-container');
+            container.innerHTML = '';
+            
+            if (questions.length === 0) {
+                container.innerHTML = '<p>Нет доступных вопросов</p>';
+                return;
+            }
+            
+            questions.forEach(q => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.innerHTML = `
+                    <h3>${q.question}</h3>
+                    <p><strong>Ответ:</strong> ${q.answer}</p>
+                    ${q.answer_options ? `
+                    <p><strong>Варианты:</strong> ${q.answer_options.join(', ')}</p>
+                    ` : ''}
+                `;
+                container.appendChild(questionCard);
+            });
+        }
+
+        // Добавление поля для вопроса в форме создания теста
+        function addQuestionField() {
+            const container = document.getElementById('test-questions-container');
+            const questionCount = container.children.length + 1;
+            
+            const questionEl = document.createElement('div');
+            questionEl.className = 'question-container';
+            questionEl.innerHTML = `
+                <h3>Вопрос ${questionCount}</h3>
+                <div class="form-group">
+                    <label>Текст вопроса</label>
+                    <input type="text" class="question-text" placeholder="Введите вопрос">
+                </div>
+                <div class="form-group">
+                    <label>Правильный ответ</label>
+                    <input type="text" class="correct-answer" placeholder="Правильный ответ">
+                </div>
+                <div class="form-group">
+                    <label>Варианты ответов</label>
+                    <div class="options-container">
+                        <input type="text" class="option" placeholder="Вариант 1">
+                        <input type="text" class="option" placeholder="Вариант 2">
+                    </div>
+                    <button class="btn btn-secondary add-option-btn">Добавить вариант</button>
+                </div>
+            `;
+            container.appendChild(questionEl);
+            
+            // Добавить обработчик для кнопки добавления варианта
+            questionEl.querySelector('.add-option-btn').addEventListener('click', function() {
+                const optionsContainer = this.parentElement.querySelector('.options-container');
+                const optionCount = optionsContainer.children.length + 1;
+                
+                const optionEl = document.createElement('input');
+                optionEl.type = 'text';
+                optionEl.className = 'option';
+                optionEl.placeholder = `Вариант ${optionCount}`;
+                optionsContainer.appendChild(optionEl);
+            });
+        }
+
+        // Создание теста
+        function createTest() {
+            const title = document.getElementById('test-title').value;
+            const questionContainers = document.querySelectorAll('#test-questions-container .question-container');
+            
+            const questions = [];
+            questionContainers.forEach(container => {
+                const questionText = container.querySelector('.question-text').value;
+                const correctAnswer = container.querySelector('.correct-answer').value;
+                const options = Array.from(container.querySelectorAll('.option'))
+                    .map(opt => opt.value)
+                    .filter(opt => opt.trim() !== '');
+                
+                if (questionText && correctAnswer && options.length >= 2) {
+                    questions.push({
+                        question: questionText,
+                        answer: correctAnswer,
+                        answer_options: options
+                    });
+                }
+            });
+            
+            if (!title || questions.length === 0) {
+                showNotification('Заполните все поля', 'error');
+                return;
+            }
+            
+            // Здесь нужно отправить данные на сервер
+            console.log('Создание теста:', { title, questions });
+            showNotification('Тест успешно создан!');
+            document.getElementById('test-title').value = '';
+            document.getElementById('test-questions-container').innerHTML = '';
+            showSection('tests-list');
+        }
+
+        // Добавление варианта ответа в форме создания вопроса
+        function addAnswerOption() {
+            const container = document.getElementById('answer-options-container');
+            const optionCount = container.children.length + 1;
+            
+            const optionEl = document.createElement('div');
+            optionEl.className = 'form-group';
+            optionEl.innerHTML = `
+                <input type="text" class="answer-option" placeholder="Вариант ответа ${optionCount}">
+            `;
+            container.appendChild(optionEl);
+        }
+
+        // Создание вопроса
+        async function createQuestion() {
+            const questionText = document.getElementById('question-text').value;
+            const correctAnswer = document.getElementById('correct-answer').value;
+            const options = Array.from(document.querySelectorAll('.answer-option'))
+                .map(opt => opt.value)
+                .filter(opt => opt.trim() !== '');
+            
+            if (!questionText || !correctAnswer || options.length < 2) {
+                showNotification('Заполните все поля. Нужно минимум 2 варианта ответа', 'error');
+                return;
+            }
+            
+            const questionData = {
+                question: questionText,
+                answer: correctAnswer,
+                answer_options: options,
+                user_id: currentUser.id // Предполагается, что currentUser содержит id
+            };
+            
+            try {
+                const token = localStorage.getItem('auth_token');
+                const response = await fetch(`${API_URL}/questions/create`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(questionData)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || 'Ошибка создания вопроса');
+                }
+                
+                showNotification('Вопрос успешно добавлен!');
+                document.getElementById('question-text').value = '';
+                document.getElementById('correct-answer').value = '';
+                document.getElementById('answer-options-container').innerHTML = `
+                    <div class="form-group">
+                        <input type="text" class="answer-option" placeholder="Вариант ответа 1">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="answer-option" placeholder="Вариант ответа 2">
+                    </div>
+                `;
+                loadQuestions();
+            } catch (error) {
+                showNotification(error.message || 'Ошибка при создании вопроса', 'error');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,12 +1,11 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from database.models import User
+from src.database.database_models import User, get_db
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from datetime import datetime, timedelta, timezone
 from typing import Optional, Dict
-from database.database import get_db
 import os
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

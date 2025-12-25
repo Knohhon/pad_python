@@ -8,13 +8,13 @@ class QuestionCreate(BaseModel):
     answer: str = Field(max_length=2000)
     answer_options: Optional[list[str]] = None
 
-    @field_validator('question', 'answer', pre=True)
+    @field_validator('question', 'answer')
     def strip_optional_whitespace(cls, v):
         if isinstance(v, str):
             return v.strip()
         return v
     
-    @field_validator('answer_options', pre=True)
+    @field_validator('answer_options')
     def count_options(cls, v):
         if len(v) > 5 or len(v) < 2:
             raise ValueError('Количество вариантов ответа слишком велико либо слишком мало')
@@ -28,13 +28,13 @@ class QuestionUpdate(BaseModel):
     answer_options: Optional[list[str]] = None
 
 
-    @field_validator('question', 'answer', pre=True)
+    @field_validator('question', 'answer')
     def strip_optional_whitespace(cls, v):
         if isinstance(v, str):
             return v.strip()
         return v
     
-    @field_validator('answer_options', pre=True)
+    @field_validator('answer_options')
     def count_options(cls, v):
         if len(v) > 5 or len(v) < 2:
             raise ValueError('Количество вариантов ответа слишком велико либо слишком мало')

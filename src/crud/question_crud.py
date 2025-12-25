@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from database.models import Question, User
-from schemas.question import QuestionCreate, QuestionUpdate
+from src.database.database_models import Question, User
+from src.schemas.question import QuestionCreate, QuestionUpdate
 from uuid import UUID
 
 def get_question(db: Session, question_id: UUID) -> Question:
